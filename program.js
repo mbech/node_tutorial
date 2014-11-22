@@ -1,7 +1,9 @@
-var numArray = process.argv.slice(2);
+var fs = require('fs');
 
-var result = numArray.reduce(function(a,b){
-  return +a + +b;
-});
 
-console.log(result);
+var filePath = process.argv.slice(2).shift();
+
+var textBuffer = fs.readFileSync(filePath);
+
+console.log(textBuffer.toString().split('\n').length - 1);
+
