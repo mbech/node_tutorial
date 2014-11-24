@@ -1,8 +1,6 @@
 var http = require("http");
 
-var requestUrl = process.argv[2];
-
-var callback = function(response){
+http.get(process.argv[2], function(response){
   var str = "";
   response.on('data', function(responseChunk){
     str += responseChunk + "\n";
@@ -13,8 +11,7 @@ var callback = function(response){
   response.on('error', function(){
     console.log("something went terribly wrong...");
   });
-}
 
-http.get(requestUrl, callback);
+});
 
 
