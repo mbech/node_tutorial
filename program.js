@@ -1,6 +1,20 @@
-var myModule = require("./my_module.js");
+var http = require("http");
 
-myModule(process.argv[2], process.argv[3], function (err, data) {
-  if (err) return console.log(err);
-  console.log(data.join("\n"));
-});
+var requestUrl = process.argv[2];
+
+var callback = function(response){
+  var str = "";
+  response.on('data', function(responseChunk){
+    str += responseChunk + "\n";
+  });
+  response.on('end', function(){
+    console.log(str);
+  });
+  response.on('error', function(){
+    console.log("something went terribly wrong...");
+  });
+}
+
+http.get(requestUrl, callback);
+
+
