@@ -1,15 +1,24 @@
 var http = require("http");
+var urls = [];
 
-http.get(process.argv[2], function(response){
-  var contents = "";
-  response.setEncoding("utf8");
-  response.on('data', function(chunk){
-    contents += chunk;
+var httpGetQueue = function(url){
+  if(!url){
+    return 0
+  }
+
+  http.get(url, function(response){
+    var contents = "";
+    response.setEncoding("utf8");
+    response.on('data', function(chunk){
+      contents += chunk;
+    });
+    response.on('end', function(){
+      console.log(contents);
+      httpGetQueue(urls.shift());
+    });
   });
-  response.on('end', function(){
-    console.log(contents.length);
-    console.log(contents);
-  });
-});
+};
 
+urls = process.argv.slice(2);
 
+httpGetQueue(urls.shift());
