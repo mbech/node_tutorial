@@ -1,30 +1,19 @@
-var http = require("http");
-var urls = [];
-var results = [];
-var count = 0;
+var portNum = process.argv[2];
+var net = require('net')
 
-var httpGetQueue = function(index){
-  var url = urls[index];
-  http.get(url, function(response){
-    var contents = "";
-    response.setEncoding("utf8");
-    response.on('data', function(chunk){
-      contents += chunk;
-    });
-    response.on('end', function(){
-      results[index] = contents;
-      count += 1;
-      if(count === urls.length ){
-        console.log(results.join("\n"));
-      }
-    });
-  });
-};
+var server = net.createServer(function (socket) {
+  var date = new Date;
 
-urls = process.argv.slice(2);
-var len = urls.length;
+  //Format should be: "YYYY-MM-DD hh:mm"
+  var dateStr = "";
 
-for(var i = 0; i < len; i++){
-  httpGetQueue(i);
-}
+  dateStr += date.getFullYear() + "-";
+  dateStr += ("0" + (date.getMonth() + 1)).slice(-2) + "-";  // starts at 0
+  dateStr += ("0" + date.getDate()).slice(-2) + " ";  // starts at 0
+  dateStr += ("0" + date.getHours()).slice(-2) + ":";
+  dateStr += ("0" + date.getMinutes()).slice(-2);
 
+  socket.end(dateStr);
+})
+
+server.listen(portNum);
