@@ -18,6 +18,7 @@ var server = http.createServer(function (req, res){
   } 
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.write(JSON.stringify(responseObj));
+  res.end();
 });
 
 server.listen(portNum);
