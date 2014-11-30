@@ -1,12 +1,11 @@
 var portNum = process.argv[2];
-var filePath = process.argv[3];
 var http = require('http');
-var fs = require('fs');
-
-var filestream = fs.createReadStream(filePath);
+var map = require('through2-map');
 
 var server = http.createServer(function (req, res){
-  filestream.pipe(res);
+  req.pipe(map(function(chunk){
+    return chunk.toString().toUpperCase();
+  })).pipe(res);
 });
 
 server.listen(portNum);
